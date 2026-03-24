@@ -5,6 +5,7 @@ Final group project for [CSC-401] — Spring, 2026
 ## Team Members
 - Stanley Navarrete
 - Danya Leyva
+- Joel Linares
 
 ## Project Overview
 A comparison of sorting algorithms (Insertion Sort, Selection Sort, Merge Sort, Quicksort)
