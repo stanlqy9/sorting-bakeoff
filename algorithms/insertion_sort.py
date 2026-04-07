@@ -10,20 +10,20 @@ def insertion_sort(input_list):
         j = i - 1 # start checking from the element just before anchor
 
        # moving left while elemnts are bigger than anchor
-        while j >= 0:  
-          comparisons += 1 # coun this comparison 
+        while j >= 0:
+          comparisons += 1 # coun this comparison
 
-          if  anchor < arr[j]:  # shift bigger element one spot to the right 
-              arr[j+1] = arr[j] 
+          if  anchor < arr[j]:  # shift bigger element one spot to the right
+              arr[j+1] = arr[j]
               swaps +=1  # move left to keep checking
               j-= 1
-        else:
+          else:
               break   # stop when the correct position is found
-        
-    #place anchor into its correct sorted position     
-    if j + 1 != i:
-        arr[j+1] = anchor
-        swaps += 1
 
-        # return the sorted list and its counts
-        return arr, comparisons, swaps
+        #place anchor into its correct sorted position
+        if j + 1 != i:
+            arr[j+1] = anchor
+            swaps += 1
+
+    # return the sorted list and its counts
+    return arr, comparisons, swaps

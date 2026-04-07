@@ -6,6 +6,9 @@ Final group project for [CSC-401] — Spring, 2026
 - Stanley Navarrete
 - Danya Leyva
 - Joel Linares
+- Alejandro Garcia
+- Kristopher Manalang
+- Avishek Barua
 
 ## Project Overview
 A comparison of sorting algorithms (Insertion Sort, Selection Sort, Merge Sort, Quicksort)

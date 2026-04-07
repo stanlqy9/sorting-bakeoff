@@ -122,24 +122,4 @@ def _median_of_three(arr, low, high):
     else:
         return high
     
-# This block provides a simple test case to verify that the quicksort function works correctly.
-# A sample list with duplicate values is sorted, and the results are printed,
-# including the original list (to confirm it was not modified), the sorted list,
-# and the total number of comparisons made during execution.
-"""
-if __name__ == "__main__":
-    # Example test list with duplicates
-    test_data = [4, 2, 4, 1, 3, 2, 4, 1, 3, 2]
 
-    # Run quicksort on the test data
-    sorted_list, comparisons = quicksort(test_data)
-
-    # Print original list
-    print("Original:", test_data)
-
-    # Print sorted result
-    print("Sorted:", sorted_list)
-
-    # Print number of comparisons made
-    print("Comparisons:", comparisons)
-"""
