@@ -15,7 +15,7 @@
 
 
 # Outputs and Deliverables
-# 1. Singular graph of runtime performances 
+# 1. Singular graph of runtime performances
   # One graph per distribution type (4 total), each distribution has 4 algorithms with varying n
   # x-axis is n, y-axis is runtime
     # find the units of measurement for both
@@ -26,42 +26,139 @@
 #-----------------------------------------------------------------------------------------------------------------------------------
 
 # Imports
+import os
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# Variables
-__results = pd.read_csv("filename.csv") # for now, a temporary filename is used; the .csv file from runner.py is stored here
+# Consistent color per algorithm across all charts
+COLORS = {
+    "insertion_sort": "tab:blue",
+    "selection_sort": "tab:orange",
+    "merge_sort": "tab:green",
+    "quicksort": "tab:red",
+}
 
-# Functions
-def display_results_chart():          # Display the results via a DataFrame table
-     display(__results)
+LABELS = {
+    "insertion_sort": "Insertion Sort",
+    "selection_sort": "Selection Sort",
+    "merge_sort": "Merge Sort",
+    "quicksort": "Quicksort",
+}
 
-def plot_random_array_performance():                            # plot the performance of all algorithms for random array distribution
-    plt.figure(fig_size = (8, 8))
+RESULTS_CSV = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "experiments", "results", "results.csv"
+)
 
-    # DATA HANDLING GOES HERE
-    
-    plt.title("Runtime Comparison Chart for Random Array Distribution")         # give the graph a title
-    plt.xlabel("n Size")                                                        # give the x-axis (size of array) a title
-    plt.ylabel("Runtime")                                                       # give the y-axis (runtime) a title 
-    plt.legend()                                                                # give the graph a legend to identify which line represents what
+FIGURES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "figures")
 
-    plt.show()
 
-def plot_nearly_sorted_array_performance():                     # plot the performance of all algorithms for nearly sorted distribution
-    plt.figure(fig_size = (8, 8))
+def _load_results():
+    return pd.read_csv(RESULTS_CSV)
 
-    plt.title("Runtime Comparison Chart for Random Array Distribution")
-    plt.xlabel("n Size")
-    plt.ylabel("Runtime")
-    plt.legend()
 
-    plt.show()
+def _save_or_show(fig, filename):
+    os.makedirs(FIGURES_DIR, exist_ok=True)
+    path = os.path.join(FIGURES_DIR, filename)
+    fig.savefig(path, bbox_inches="tight")
+    print(f"Saved: {path}")
+    plt.close(fig)
 
-def plot_reverse_sorted_array_performance():                    # plot the performance of all algorithms for reverse sorted array distribution
-      plt.figure(fig_size = (8, 8))
 
-def plot_duplicates_heavy_array_performance():                  # plot the performance of all algorithms for duplicate-heavy array distribution
-      plt.figure(fig_size = (8, 8))
+def _plot_distribution(df, distribution, title, filename):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    subset = df[df["distribution"] == distribution].sort_values("n")
+
+    for algo in df["algorithm"].unique():
+        algo_data = subset[subset["algorithm"] == algo]
+        if algo_data.empty:
+            continue
+        ax.plot(
+            algo_data["n"],
+            algo_data["avg_time"],
+            marker="o",
+            label=LABELS.get(algo, algo),
+            color=COLORS.get(algo),
+        )
+
+    ax.set_title(title)
+    ax.set_xlabel("n (input size)")
+    ax.set_ylabel("Average Runtime (seconds)")
+    ax.legend()
+    ax.grid(True, linestyle="--", alpha=0.5)
+    _save_or_show(fig, filename)
+
+
+def display_results_chart():
+    df = _load_results()
+    print(df.to_string(index=False))
+
+
+def plot_random_array_performance():
+    df = _load_results()
+    _plot_distribution(
+        df,
+        "random",
+        "Runtime Comparison — Random Array Distribution",
+        "random_array_performance.png",
+    )
+
+
+def plot_nearly_sorted_array_performance():
+    df = _load_results()
+    _plot_distribution(
+        df,
+        "nearly_sorted",
+        "Runtime Comparison — Nearly Sorted Array Distribution",
+        "nearly_sorted_array_performance.png",
+    )
+
+
+def plot_reverse_sorted_array_performance():
+    df = _load_results()
+    _plot_distribution(
+        df,
+        "reverse_sorted",
+        "Runtime Comparison — Reverse Sorted Array Distribution",
+        "reverse_sorted_array_performance.png",
+    )
+
+
+def plot_duplicates_heavy_array_performance():
+    df = _load_results()
+    _plot_distribution(
+        df,
+        "duplicates_heavy",
+        "Runtime Comparison — Duplicate-Heavy Array Distribution",
+        "duplicates_heavy_array_performance.png",
+    )
+
 
 def show_summary_chart_max_n():
+    df = _load_results()
+
+    # For each algorithm, pick the row with the largest n per distribution
+    max_n_rows = df.loc[df.groupby(["algorithm", "distribution"])["n"].idxmax()]
+
+    # Pivot: rows = distribution, columns = algorithm, values = avg_time
+    pivot = max_n_rows.pivot_table(index="distribution", columns="algorithm", values="avg_time")
+    pivot.columns = [LABELS.get(c, c) for c in pivot.columns]
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    pivot.plot(kind="bar", ax=ax, color=[COLORS.get(c.replace(" ", "_").lower(), None) for c in pivot.columns])
+    ax.set_title("Summary: Runtime at Maximum n per Distribution")
+    ax.set_xlabel("Distribution Type")
+    ax.set_ylabel("Average Runtime (seconds)")
+    ax.legend(title="Algorithm")
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=30, ha="right")
+    ax.grid(True, axis="y", linestyle="--", alpha=0.5)
+    _save_or_show(fig, "summary_max_n.png")
+
+
+if __name__ == "__main__":
+    plot_random_array_performance()
+    plot_nearly_sorted_array_performance()
+    plot_reverse_sorted_array_performance()
+    plot_duplicates_heavy_array_performance()
+    show_summary_chart_max_n()
+    print("All charts saved to analysis/figures/")
