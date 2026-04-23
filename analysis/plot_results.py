@@ -24,11 +24,36 @@
 # 2. Summary table of algorithm performances with maximum n inputs
   # can use Pandas DataFrame to cleanly show a table to avoid potential inconsistent formatting; if not use traditional formatting techniques
 #-----------------------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------------------
+# Purpose:
+# 1. Create graphs and a summary chart comparing performances of the four observed algorithms (Insertion Sort, Selection Sort, Quicksort, Mergesort)
+
+# Necessary inputs:
+# 1. A .csv file containing the average runtime, std dev, comparison count, and swap count
+  # As of now, the .csv file is assumed to have shape () --> (rows, columns)
+
+# Necessary libraries
+# pandas --> for data loading, .csv file management
+# matplotlib --> for graph creation
+# IPython --> primarily to use the display() function, this is a shell
+
+# Important Information
+# 1. Expected 96 rows (4 distributions * 4 algorithms * 6 sizes = 96 unique combos)
+
+# Outputs and Deliverables
+# 1. Singular graph of runtime performances 
+  # One graph per distribution type (4 total), each distribution has 4 algorithms with varying n
+  # x-axis is n, y-axis is runtime
+    # find the units of measurement for both
+  # REQUIRED: legend, axis labels, title, color consistency
+
+# 2. Summary table of algorithm performances with maximum n inputs
+  # can use Pandas DataFrame to cleanly show a table to avoid potential inconsistent formatting; if not use traditional formatting techniques
+#-----------------------------------------------------------------------------------------------------------------------------------
 
 # Imports
 import matplotlib.pyplot as plt
 import pandas as pd
-from IPython.display import display
 
 # Variables
 __results = pd.read_csv("mock_data_sortingbakeoff.csv") # for now, a temporary filename is used; the .csv file from runner.py is stored here
@@ -60,6 +85,7 @@ def plot_random_array_performance():                            # plot the perfo
     
     # Display graph
     plt.show()
+
 
 def plot_nearly_sorted_array_performance():                     # plot the performance of all algorithms for nearly sorted distribution
     nearly_sorted_array_rows = __results.loc[__results["Distribution"] == "Nearly Sorted Array"]
@@ -144,6 +170,7 @@ def show_summary_chart_max_n():
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
+from IPython.display import display
 
 # Consistent color per algorithm across all charts
 COLORS = {
