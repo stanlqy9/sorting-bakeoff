@@ -6,13 +6,13 @@
 # 1. A .csv file containing the average runtime, std dev, comparison count, and swap count
   # As of now, the .csv file is assumed to have shape () --> (rows, columns)
 
-# Necessary libraries
-# pandas --> for data loading, .csv file management
-# matplotlib --> for graph creation
-# IPython --> primarily to use the display() function, this is a shell
+# Draft of Expected .csv file shape:
+#
 
 # Important Information
-# 1. Expected 96 rows (4 distributions * 4 algorithms * 6 sizes = 96 unique combos)
+# 1. There are 4 algorithms, 4 distributions, 6 n-values, and 5 trials per combination (algorithm - distribution - n)
+
+
 
 # Outputs and Deliverables
 # 1. Singular graph of runtime performances
@@ -29,7 +29,6 @@
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
-from IPython.display import display
 
 # Consistent color per algorithm across all charts
 COLORS = {
